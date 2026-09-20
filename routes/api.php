@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\SolicitudController;
 use Illuminate\Support\Facades\Route;
 
 //Rutas públicas
@@ -18,19 +18,14 @@ Route::post('solicitudes', [SolicitudController::class, 'store']);
 
 
 Route::middleware('auth:api')->prefix('auth')->group(function () {
+    Route::get('me', [AuthController::class, 'me']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+});
 
-    //perfir y sesion
-    Route::prefix('auth')->group(function () {  
-        Route::get('me', [AuthController::class, 'me']);
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-    });
-
-//gestion de solicitudes de acceso
-    Route::prefix('solicitudes')->group(function () {
-        Route::get('/', [SolicitudController::class, 'index']);
-        Route::post('{id_solicitud}/aprobar', [SolicitudController::class, 'aprobar']);
-        Route::post('{id_solicitud}/rechazar', [SolicitudController::class, 'rechazar']);
-    });
-
+// Gestión de solicitudes de acceso
+Route::middleware('auth:api')->prefix('solicitudes')->group(function () {
+    Route::get('/', [SolicitudController::class, 'index']);
+    Route::post('{id_solicitud}/aprobar', [SolicitudController::class, 'aprobar']);
+    Route::post('{id_solicitud}/rechazar', [SolicitudController::class, 'rechazar']);
 });
