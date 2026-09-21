@@ -7,23 +7,24 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use tymon\JWTAuth\Contracts\JWTSubject;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
-
-
 
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
-    protected $table = 'credenciales'; 
-    protected $primaryKey = 'id_credenciales'; 
+    protected $table = 'credenciales';
+
+    protected $primaryKey = 'id_credenciales';
+
     public $timestamps = false;
+
     protected $fillable = [
         'id_usuario',
         'cedula',
@@ -39,7 +40,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        
+
     ];
 
     /**
@@ -53,7 +54,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    /** 
+
+    /**
      * datos guardados dentro del payload del JWT
      */
     public function getJWTCustomClaims(): array
@@ -63,6 +65,12 @@ class User extends Authenticatable
             'cedula' => $this->cedula,
         ];
     }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
     /**
      * Relación con tabla principal Usuarios
      */
@@ -70,5 +78,4 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Usuario::class, 'id_usuario', 'id_usuario');
     }
-
 }

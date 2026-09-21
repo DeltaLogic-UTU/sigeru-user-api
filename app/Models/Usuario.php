@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
 
 class Usuario extends Model
 {
